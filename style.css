@@ -1,0 +1,15 @@
+textarea {
+    font-size: 32px;
+    width: 100%;
+}
+
+.speak-btn {
+    text-align: center;
+    border: solid 1px black;
+    color: white;
+    padding: 1em;
+    font-size: 32px;
+    font-family: sans-serif;
+    background-color: rgb(101, 95, 160);
+    cursor: pointer;
+}
