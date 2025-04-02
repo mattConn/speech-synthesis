@@ -22,21 +22,37 @@ const handleVoiceSelect = () => {
   speakMessage("Selected voice");
 }
 
-const handleRecentMessageClick = (message, index) => {
+const handleRecentMessageClick = (message) => {
   speakMessage(message);
+  return;
   recentMessages.value = recentMessages.value.filter(msg => message !== msg);
   recentMessages.value.unshift(message);
 }
 
-const messageToSpeak = ref('')
+const handleRemoveRecentMessageClick = (message) => {
+  console.log("REMOVE")
+  recentMessages.value = recentMessages.value.filter(msg => message !== msg);
+}
+
+const messageToSpeak = ref('');
 
 const handleSpeakBtnClick = () => {
-  if (!messageToSpeak.value.trim()) return;
-
   speakMessage(messageToSpeak.value);
-  recentMessages.value.unshift(messageToSpeak.value)
-  messageToSpeak.value = ""
 }
+
+const handleSaveBtnClick = () => {
+  recentMessages.value.unshift(messageToSpeak.value);
+}
+
+const handleClearBtnClick = () => {
+  messageToSpeak.value = "";
+}
+
+const handleSpeakAndSaveBtnClick = () => {
+  handleSpeakBtnClick();
+  handleSaveBtnClick();
+}
+
 </script>
 
 <template>
@@ -49,13 +65,25 @@ const handleSpeakBtnClick = () => {
         {{ voice.name }} - {{ voice.lang }}
       </option>
     </select> 
-    <div tabindex="0" class="speak-btn" @click="handleSpeakBtnClick">
-      Speak
+    <div class="button-ctn">
+      <div tabindex="0" class="button speak-btn" @click="handleSpeakAndSaveBtnClick">
+        Speak and save
+      </div>
+      <div tabindex="0" class="button speak-btn" @click="handleSpeakBtnClick">
+        Speak
+      </div>
+      <div tabindex="0  " class="button" @click="handleSaveBtnClick">
+        Save
+      </div>
+      <div tabindex="0  " class="button" @click="handleClearBtnClick">
+        Clear
+      </div>
     </div>
     <div class="recent-messages-ctn">
       <div class="recent-message-btn" tabindex="0"
-      v-for="(message, index) in recentMessages" @click="handleRecentMessageClick(message, index)">
-        {{ message }}
+      v-for="(message, index) in recentMessages">
+        <span @click="handleRecentMessageClick(message, index)">{{ message }}</span>
+        <div @click="handleRemoveRecentMessageClick(message)">Remove</div>
     </div>
     </div>
   </div>
@@ -73,24 +101,40 @@ textarea {
   width: 100%;
 }
 
-.speak-btn {
+.button-ctn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  border-radius: 3px;
   text-align: center;
-  border: solid 1px black;
   color: white;
   padding: 1em;
+  margin: 0 10px;
   font-size: 32px;
   font-family: sans-serif;
-  background-color: rgb(101, 95, 160);
+  /* border: solid 1px rgb(200, 200, 200); */
   cursor: pointer;
+  background-color: rgb(101, 95, 160);
+}
+
+.speak-btn {
+  background-color: rgb(101, 95, 160);
+  color: white;
+  border: none;
 }
 
 .recent-messages-ctn {
     height: 80vh;
     overflow: scroll;
+    margin: 10px 0;
 }
 
-
 .recent-message-btn {
+  display: flex;
+  justify-content: space-between;
   border: solid 1px black;
   color: black;
   padding: 1em;
